@@ -1,0 +1,56 @@
+
+
+#loginpage {
+    
+    display: table;
+    width: 100%;
+    height: auto;
+    padding: 100px 0;
+    text-align: center;
+    color: #000;
+    
+    background-color: #fff;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+#userpage {
+
+    display: table;
+    width: 100%;
+    height: auto;
+  
+    color: #000;
+
+
+    background-color: #fff;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+    
+
+}
+
+#songtable
+{
+   color: #000;
+}
+
+.songdiv {
+    position: relative;
+    padding: 45px 15px 15px;
+    margin: 0 -15px 15px;
+    
+    border-right: 1px solid #eee;
+    border-left: 1px solid #eee;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.addasong {
+     padding: 5px;
+}
+

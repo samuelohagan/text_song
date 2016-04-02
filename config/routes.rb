@@ -1,10 +1,19 @@
 Rails.application.routes.draw do
+  get 'users/new'
+
+  get 'sessions/new'
+
   devise_for :users
+
+
   root 'index#home'
 
-  get 'index/help'
+
+  get 'help'    => 'index#help'
 
   get 'index/about'
+  resources :users, only: [:show], :path => "home"
+  resources :songs
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
