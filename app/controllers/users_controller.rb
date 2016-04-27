@@ -7,6 +7,7 @@ class UsersController < ApplicationController
   			@user = current_user
   			@song = current_user.songs.build
   			@songs = @user.songs
+  			@loading = "Deh"
   		
 	end
 end

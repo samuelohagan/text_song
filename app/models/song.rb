@@ -3,7 +3,7 @@ class Song < ActiveRecord::Base
 	require 'rubygems'
 	require 'streamio-ffmpeg'
 	require "resolv-replace.rb"	
-
+  require 'fileutils'
   belongs_to :user
 
   
@@ -38,8 +38,19 @@ class Song < ActiveRecord::Base
 
     
 
-    def self.downloadspotify()
+    def self.downloadspotify(spotify_url, userid)
 
+      FileUtils.mkpath('/home/samuelohagan/Desktop//RailsApps/text_song/public/usernumber' + userid.to_s)
+        
+        if !(((spotify_url.include? "https://play.spotify.com/user/") or (spotify_url.include? "https://open.spotify.com/user/"))  and (spotify_url.include? "/playlist"))
+          return "error"
+        end
+
+        spotify_url.sub!("https://play.spotify.com/user/", "https://api.spotify.com/v1/users/")
+        spotify_url.sub!("https://open.spotify.com/user/", "https://api.spotify.com/v1/users/")
+        spotify_url.sub!("/playlist/", "/playlists/")
+        spotify_url += "/tracks"
+        
       
 
         spotify_token = Unirest.post "https://accounts.spotify.com/api/token",
@@ -48,16 +59,22 @@ class Song < ActiveRecord::Base
         access_token = spotify_token.body["access_token"]
 
 
-        spotifyunparsedresponse = Unirest.get "https://api.spotify.com/v1/users/" + "samuelohagan" + "/playlists/" + "1Y308My6wMypsQjUp7eKVt" + "/tracks",
+        spotifyunparsedresponse = Unirest.get spotify_url,
          headers:{ "Accept" => "application/json", "Authorization" => "Bearer" + " " + access_token } 
         amountspotify = spotifyunparsedresponse.body["total"]
         spotify_response_track = Array.new()
         spotify_response_artist = Array.new()
+
+        if spotifyunparsedresponse.body.to_s.include? "{\"error\"=>{\"status"
+           return "error"
+        end
+        
         
 
         amountspotify.times do |i|
           spotify_response_track.push(spotifyunparsedresponse.body["items"][i]["track"]["name"])
           spotify_response_artist.push(spotifyunparsedresponse.body["items"][i]["track"]["artists"][0]["name"])
+
 
           response = Unirest.get "https://www.googleapis.com/youtube/v3/search", 
                         headers:{ "Accept" => "application/json" }, 
@@ -66,7 +83,7 @@ class Song < ActiveRecord::Base
 
                        
 
-         name = spotify_response_track[i] + '.opus'
+         name = 'public/' + spotify_response_track[i] + '.opus'
           options = {
           output: name,
             format: :bestaudio
@@ -78,10 +95,12 @@ class Song < ActiveRecord::Base
      
           movie = FFMPEG::Movie.new(name)
           
-          transcoded_movie = movie.transcode(spotify_response_track[i] + '.mp3')
+          transcoded_movie = movie.transcode('public/' + spotify_response_track[i] + '.mp3')
           File.delete(name)
         end
-        return spotify_response_track
+        allspotify = [spotify_response_track, spotify_response_artist]
+
+
 
         
 

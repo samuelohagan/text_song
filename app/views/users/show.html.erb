@@ -1,10 +1,27 @@
+ <script>
+
+$(function(){
+    $("#loading_image").hide();
+     $("#loadingbutton1").on("click", function(){
+        $("#loading_image").show();
+    });
+    
+});
+
+
+ </script>
+ 
+
+
 <% content_for :bodyid do %>userpage<% end %>
+
 <% if @user == nil %>
 <h1>ERROR!</h1>
 <% else %>
-
-
-
+<% if @loading == "Deh" %>
+<div id="loading_image" class="whirl traditional Fullscreen"></div>
+<% end %>
+ 
 	<nav class="navbar-default navbar-custom " role="navigation">
         <div class="container">
             <div class="navbar-header">
@@ -12,7 +29,7 @@
                     <i class="fa fa-bars"></i>
                 </button>
                 <a class="navbar-brand page-scroll" href="#page-top">
-                    <i class="fa fa-play-circle"></i>  <span class="light">Start</span> Bootstrap
+                    <i class="fa fa-play-circle"></i>  <span class="light">Start</span> <%= @loading %>
                 </a>
             </div>
 
@@ -31,8 +48,8 @@
 						<%= form_for(@song) do |f| %>
 
                         <div class="form-inline addasong">
-							<%= f.text_field :query, class: "form-control", placeholder: "add a song" %>
-                            <%= f.submit "Submit", class: "btn btn-default" %>
+							<%= f.text_field :query, class: "form-control", placeholder: "Enter Spotify Url" %>
+                            <%= f.submit "Submit", class: "btn btn-default", id: "loadingbutton1" %>
                         </div>
 						<% end %>
                 	</li>
@@ -50,19 +67,41 @@
 <br />
 <div class="container">
     <div class="col-md-9 songdiv">
+        <%= form_tag destroy_multiple_songs_path, method: :delete do %>
+       
             <table class="table table-striped">
                 <caption> Song Queue </caption>
                 <thead>
                 <tr>
                     <td class="text-left"> Song Id</td>
-                    <td class="text-center">Song Query</td> 
-                    <td class="text-right">User Id</td>
+                    <td class="text-left">Track</td> 
+                    <td class="text-center">Artist</td>
+                    <td class="text-right"><input type="checkbox" id="selectAll" value="selectAll"></td>
                 </tr>
                 </thead>
                 <tbody>
                 <%= render @songs %>
             </tbody>
             </table>
+            
+            <%= submit_tag "Download", class: "btn btn-primary"  %>
+            <%= submit_tag "Delete selected", class: "btn btn-danger"  %>
+
+            <script>
+                    $('#selectAll').click(function() {
+                       if (this.checked) {
+                           $(':checkbox').each(function() {
+                               this.checked = true;                        
+                           });
+                       } else {
+                          $(':checkbox').each(function() {
+                               this.checked = false;                        
+                           });
+                       } 
+                    });
+            </script>
+            <% end %>
+
         
     </div>
     <div class="col-md-9 songdiv">
@@ -77,3 +116,4 @@
 
 
 <% end %>
+

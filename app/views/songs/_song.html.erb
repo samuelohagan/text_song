@@ -1,6 +1,7 @@
 <tr>
     <td class="text-left"><%= song.id %></td>
-    <td class="text-center"><%= song.query %></td> 
-    <td class="text-right"><%= song.user_id %></td>
+    <td class="text-left"><%= song.query %></td> 
+    <td class="text-center"><%= song.name %></td>
+    <td class="text-right"><%= check_box_tag "songs[]", song.id %></td>
 </tr>
   
